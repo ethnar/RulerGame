@@ -1,0 +1,21 @@
+{
+  "name": "rulersim",
+  "version": "0.0.1",
+  "description": "Ruler simulation engine",
+  "main": "src/index.js",
+  "dependencies": {
+    "nodejs-websocket": "^1.6.0",
+    "synaptic": "^1.0.8"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ruler",
+    "game",
+    "sim"
+  ],
+  "author": "Ethnar",
+  "license": "UNLICENSED"
+}
