@@ -1,6 +1,11 @@
 let Tavern = require('./buildings/Tavern');
 let Farm = require('./buildings/Farm');
 
+global.service.registerHandler('city', (params, player) => {
+    var city = player.getCity();
+    return city.getJson();
+});
+
 class City {
 	constructor (world, x, y) {
 	    this.world = world;
@@ -22,15 +27,16 @@ class City {
 		this.build(Tavern);
 		this.build(Farm, 1, 1);
 		this.build(Farm, 2, 1);
-
-		world.getService().registerHandler('city', params => {
-			setTimeout(() => {
-				this.world.getService().sendUpdate('city', {somestuff: 'This is an update'});
-			}, 1000);
-
-			return this.tiles;
-		});
 	}
+
+	getJson () {
+	    return {
+            population: this.population,
+            prestige: this.prestige,
+            food: this.food,
+            luxury: this.luxury
+        };
+    }
 
     setOwner (player) {
         this.owner = player;
@@ -105,6 +111,8 @@ class City {
 		this.eat();
 
 		this.waste();
+
+        global.service.sendUpdate('city', this.owner, this.getJson());
 	}
 }
 

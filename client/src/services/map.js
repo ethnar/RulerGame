@@ -1,13 +1,13 @@
 angular.module('RulerGame')
 
 .service('mapService', function (serverService) {
-    this.data = null;
+    this.data = {};
 
     serverService.request('map').then(response => {
-        this.data = response;
+        angular.extend(this.data, response);
     });
 
     serverService.onUpdate('map', update => {
-        this.data = update;
+        angular.extend(this.data, update);
     });
 });

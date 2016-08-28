@@ -1,5 +1,5 @@
 angular.module('RulerGame')
 
 .controller('mapController', function ($scope, mapService) {
-    $scope.model = {};
+    $scope.data = mapService.data;
 });

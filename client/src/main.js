@@ -12,6 +12,7 @@ angular.module('RulerGame', ['ngRoute', 'ngWebSocket'])
     $scope.model = {};
 
     serverService.request('authenticate', {
+        user: 'ethnar',
         password: 'abc'
     });
 });

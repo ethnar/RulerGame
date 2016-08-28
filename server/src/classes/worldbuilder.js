@@ -1,9 +1,12 @@
 let City = require('./city');
 let Player = require('./player');
+let WorldMap = require('./world-map.js');
 
 class WorldBuilder {
     createWorld (world) {
-        let [x, y] = world.getNewCityLocation();
+        let map = new WorldMap(world);
+
+        let [x, y] = map.getNewCityLocation();
 
         let player = new Player(world, 'ethnar', 'abc');
         let testCity = new City(world, x, y);

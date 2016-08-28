@@ -24,7 +24,8 @@ class Service {
             conn.on('close', (code, reason) => {
                 let idx = this.connections.indexOf(conn);
                 this.connections.splice(idx, 1);
-                console.log("Connection closed")
+                delete this.playerMap[conn];
+                console.log("Connection closed");
             });
         }).listen(8001);
     }
@@ -42,12 +43,14 @@ class Service {
         this.handlers[topic] = callback;
     }
 
-    sendUpdate (topic, data) {
+    sendUpdate (topic, player, data) {
         this.connections.forEach(connection => {
-            connection.sendText(JSON.stringify({
-                update: topic,
-                data: data
-            }));
+            if (!player || this.playerMap[connection] === player) {
+                connection.sendText(JSON.stringify({
+                    update: topic,
+                    data: data
+                }));
+            }
         });
     }
 

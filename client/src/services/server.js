@@ -18,7 +18,7 @@ angular.module('RulerGame')
             if (updateHandlers[json.update]) {
                 updateHandlers[json.update](json.data);
             } else {
-                throw new Error('Received update that does not have a handler');
+                console.warn('Received update that does not have a handler');
             }
         }
     });
