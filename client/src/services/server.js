@@ -10,6 +10,7 @@ angular.module('RulerGame')
         if (json.request) {
             if (pendingRequests[json.request]) {
                 pendingRequests[json.request].resolve(json.data);
+                delete pendingRequests[json.request];
             } else {
                 throw new Error('Received response to a request that wasn\'t sent');
             }
@@ -21,6 +22,10 @@ angular.module('RulerGame')
                 console.warn('Received update that does not have a handler');
             }
         }
+    });
+
+    connection.onClose(() => {
+        window.location.reload();
     });
 
     this.request = (name, params) => {

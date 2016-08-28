@@ -4,6 +4,7 @@ angular.module('RulerGame')
     return {
         restrict: 'E',
         replace: true,
+        scope: {},
         templateUrl: 'components/city-status/city-status.html',
         controller: function ($scope) {
             $scope.data = cityService.data;

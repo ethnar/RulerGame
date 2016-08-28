@@ -11,7 +11,7 @@ class Service {
             this.connections.push(conn);
 
             conn.on('text', (str) => {
-                let json = JSON.parse(str);
+                let json = JSON.parse(str); // TODO: failsafe
 
                 let response = {
                     request: json.request,
@@ -25,7 +25,7 @@ class Service {
                 let idx = this.connections.indexOf(conn);
                 this.connections.splice(idx, 1);
                 delete this.playerMap[conn];
-                console.log("Connection closed");
+                console.log('Connection closed');
             });
         }).listen(8001);
     }

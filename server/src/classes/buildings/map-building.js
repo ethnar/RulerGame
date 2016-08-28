@@ -5,6 +5,7 @@ class MapBuilding extends Building {
 		super(city);
 		this.x = x;
 		this.y = y;
+		this.cityBuilding = false;
 	}
 }
 

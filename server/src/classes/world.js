@@ -1,8 +1,8 @@
-let worldbuilder = require('./worldbuilder.js');
-
 class World {
 	constructor () {
-		this.cities = [];
+	    this.AIs = [];
+        this.cities = [];
+        this.armies = [];
         this.players = [];
 
         global.service.registerHandler('authenticate', (params, previousPlayer, conn) => {
@@ -20,33 +20,44 @@ class World {
 	    return this.service;
     }
 
-    run () {
-        worldbuilder.createWorld(this);
+    getPlayers () {
+        return this.players;
+    }
 
+    run () {
         this.loop();
     }
 
     loop () {
         this.cycle();
-        setTimeout(this.loop.bind(this), 500);
+        setTimeout(this.loop.bind(this), 1000);
     }
 
     cycle () {
+        this.AIs.forEach(AI => {
+            AI.cycle();
+        });
         this.cities.forEach(city => {
             city.cycle();
         });
-    }
+        this.armies.forEach(army => {
+            army.cycle();
+            army.preparePerks();
+        });
+        this.armies.forEach(army => {
+            army.executePerks();
+        });
+        this.armies.forEach(army => {
+            army.fight();
+        });
+        this.armies.forEach(army => {
+            army.checkCasualties();
+        });
 
-    addCity (city) {
-    	this.cities.push(city);
-    }
-
-    addPlayer (player) {
-        this.players.push(player);
-    }
-
-    getPlayers () {
-        return this.players;
+        // this.armies.forEach(army => {
+        //     let hps = army.units.map(unit => unit.currentHp || unit.hp).join(' ');
+        //     console.log(army.owner.getName() + ': ' + hps);
+        // });
     }
 }
 

@@ -10,4 +10,15 @@ angular.module('RulerGame')
     serverService.onUpdate('map', update => {
         angular.extend(this.data, update);
     });
+
+    serverService.onUpdate('tile', update => {
+        angular.extend(this.data[update.x][update.y], update.data);
+    });
+
+    this.orderMove = (fromTile, toTile) => {
+        serverService.request('orderMove', {
+            from: { x: fromTile.x, y: fromTile.y },
+            to: { x: toTile.x, y: toTile.y }
+        });
+    };
 });

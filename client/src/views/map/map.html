@@ -1,4 +1,19 @@
-<div class="map">
+<div>
     <city-status></city-status>
-    MAP
+    <tile-panel tile="model.selectedTile" mode="model.mode"></tile-panel>
+    <div class="map">
+        <div class="row" ng-repeat="row in data">
+            <div ng-repeat="tile in row" class="tile" ng-click="selectTile(tile)" ng-style="::getTileStyle(tile)">
+                <img ng-if="!tile.building" ng-src="img/tiles/{{tile.type}}.jpg" />
+                <img ng-if="tile.building" ng-src="img/buildings/{{tile.building.image}}.jpg" />
+                <div ng-if="tile.city" class="city"></div>
+                <div class="armies">
+                    <div ng-if="tile.army" class="army" ng-class="getArmyClass(tile.army)">
+                        <img ng-src="img/units/{{tile.army.icon}}.png" />
+                        <div class="movement" ng-class="getMovingClass(tile)"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

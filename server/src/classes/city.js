@@ -1,17 +1,37 @@
-let Tavern = require('./buildings/Tavern');
-let Farm = require('./buildings/Farm');
+let Entity = require('./entity');
+let Army = require('./army');
+
+let Worker = require('./units/humans/worker');
+let Militia = require('./units/humans/militia');
 
 global.service.registerHandler('city', (params, player) => {
-    var city = player.getCity();
-    return city.getJson();
+    if (!player) {
+        return;
+    }
+    let city = player.getCity();
+    return city.getResponseData();
 });
 
-class City {
-	constructor (world, x, y) {
-	    this.world = world;
-        this.x = x;
-        this.y = y;
+global.service.registerHandler('availableBuildings', (params, player) => {
+    if (!player) {
+        return;
+    }
+    return player.getAvailableBuildings();
+});
 
+global.service.registerHandler('recruit', (params, player) => {
+    if (!player) {
+        return;
+    }
+    let city = player.getCity();
+    return city.recruit(params.type);
+});
+
+class City extends Entity {
+	constructor (name) {
+	    super('cities');
+
+		this.name = name;
 		this.population = 5;
 		this.happiness = 5;
 		this.prestige = 5;
@@ -22,15 +42,19 @@ class City {
 		this.buildings = [];
 
 		this.idlePopulation = this.population;
-
-		// TODO: that should be done by the world builder
-		this.build(Tavern);
-		this.build(Farm, 1, 1);
-		this.build(Farm, 2, 1);
 	}
 
-	getJson () {
+	setTile (tile) {
+	    this.tile = tile;
+    }
+
+	getTile () {
+		return this.tile;
+	}
+
+    getResponseData () {
 	    return {
+	        name: this.name,
             population: this.population,
             prestige: this.prestige,
             food: this.food,
@@ -43,21 +67,61 @@ class City {
         player.city = this;
     }
 
-	build (BuildingClass, x, y) {
-		let building = this.startBuilding(BuildingClass, x, y);
+    recruit (type) {
+        let unit;
+        switch (type) {
+            case 'worker':
+                unit = new Worker();
+                break;
+            case 'warrior':
+                unit = new Militia();
+                break;
+        }
+        if (!unit) {
+            return false;
+        }
+
+        let army = this.tile.getArmy();
+        if (!army) {
+            army = new Army(this.owner, this.tile);
+        }
+        if (army.owner !== this.owner) {
+            return false;
+        }
+
+        if (this.reserveIdler()) {
+            army.addUnit(unit);
+        }
+    }
+
+	build (BuildingClass, tile) {
+		let building = this.startBuilding(BuildingClass, tile);
+        this.reserveIdler();
 		building.finish();
 	}
 
-	startBuilding (BuildingClass, x, y) {
-		let building = new BuildingClass(this, x, y);
-		this.buildings.push(building);
+	startBuilding (BuildingClass, tile) {
+		let building = new BuildingClass(this, tile);
 
+        if (!building.isCityBuilding()) {
+            tile.placeBuilding(building);
+            tile.sendUpdate();
+        }
+		this.buildings.push(building);
 		return building;
 	}
 
 	reserveIdler () {
 		return this.idlePopulation > 0 ? !!(this.idlePopulation--) : false;
 	}
+
+    getPopulation () {
+        return this.population;
+    }
+
+    getOwner () {
+        return this.owner;
+    }
 
 	getProduction () {
 		return this.baseProduction + this.buildings.reduce((last, building) => last + building.getProduction(), 0);
@@ -87,18 +151,10 @@ class City {
 
 	cycle () {
 		let remainingProduction = this.getProduction();
-		this.idlePopulation = this.population;
 
 		this.buildings.forEach(building => {
-			if (building.isComplete()) {
-				if (building.isWorking()) {
-					if (this.idlePopulation > 0) {
-						this.idlePopulation--;
-						building.cycle();
-					} else {
-						building.stopWorking();
-					}
-				}
+			if (building.isComplete() && building.isWorking()) {
+                building.cycle();
 			}
 		});
 
@@ -112,7 +168,7 @@ class City {
 
 		this.waste();
 
-        global.service.sendUpdate('city', this.owner, this.getJson());
+        global.service.sendUpdate('city', this.owner, this.getResponseData());
 	}
 }
 

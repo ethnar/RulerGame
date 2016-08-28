@@ -4,6 +4,8 @@ class Building {
 		this.city = city;
 		this.productionCost = 100;
 		this.productionProgress = 0;
+        this.cityBuilding = true;
+        this.working = true;
 	}
 
 	progressBuild (production) {
@@ -15,10 +17,19 @@ class Building {
 		return production - usedProduction;
 	}
 
+	getResponseData () {
+		return {
+		    image: this.getImage()
+        };
+	}
+
+	isCityBuilding () {
+	    return this.cityBuilding;
+    }
+
 	finish () {
 		this.productionProgress = this.productionCost;
 		this.durability = 100;
-		this.working = this.city.reserveIdler();
 		console.log('finished building ' + this.constructor.name);
 	}
 
@@ -33,6 +44,10 @@ class Building {
 	isComplete() {
 		return this.productionProgress === this.productionCost;
 	}
+
+	setTile(tile) {
+	    this.tile = tile;
+    }
 
 	cycle () {
 

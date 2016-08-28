@@ -6,6 +6,10 @@ class Farm extends MapBuilding {
 		this.productionCost = 300;
 	}
 
+	getImage () {
+	    return 'asdasdasd';
+    }
+
 	cycle () {
 		this.city.modifyFood(+3);
 	}

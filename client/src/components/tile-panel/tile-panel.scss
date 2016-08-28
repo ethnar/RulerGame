@@ -1,0 +1,14 @@
+.tile-panel {
+  position: fixed;
+  z-index: 100;
+  bottom: 0;
+
+  .contents {
+    background: white;
+    font-size: 36px;
+
+    &.hidden {
+      display: none;
+    }
+  }
+}

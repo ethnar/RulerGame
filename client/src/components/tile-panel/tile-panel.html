@@ -1,0 +1,23 @@
+<div class="tile-panel">
+    <div class="contents" ng-class="{hidden: !tile}">
+        <div class="city-panel" ng-show="tile.city">
+            <div class="name">
+                {{tile.city.name}}
+            </div>
+            <div class="actions">
+                <div class="recruit-worker" ng-click="recruitWorker()">Recruit Worker</div>
+                <div class="recruit-warrior" ng-click="recruitWarrior()">Recruit Warrior</div>
+            </div>
+        </div>
+        <div class="army-panel" ng-show="tile.army">
+            <div class="name">Army</div>
+            <span ng-repeat="unit in tile.army.units" class="unit">
+                <img ng-src="img/units/{{unit.image}}.png" />
+            </span>
+            <div class="orders">
+                <div ng-click="orderMove()">Move</div>
+                <div ng-repeat="building in availableBuildings" ng-click="orderBuild(building.type)">Build {{building.type}}</div>
+            </div>
+        </div>
+    </div>
+</div>
