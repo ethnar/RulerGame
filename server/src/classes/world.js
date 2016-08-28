@@ -7,7 +7,15 @@ class World {
 		this.cities = [];
         this.players = [];
         this.map = new Map(this);
-	}
+
+        this.service.registerHandler('authenticate', (params, currentPlayer, conn) => {
+            let player = this.players.find((player) => {
+                return player.verifyUsernameAndPassword(params.user, params.password);
+            });
+            this.service.setPlayer(conn, player);
+            return !!player;
+        });
+    }
 
 	getService () {
 	    return this.service;
@@ -40,7 +48,10 @@ class World {
 
     addPlayer (player) {
         this.players.push(player);
-        player.setWorld(world);
+    }
+
+    getPlayers () {
+        return this.players;
     }
 }
 

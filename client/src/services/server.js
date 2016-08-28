@@ -5,11 +5,6 @@ angular.module('RulerGame')
     let updateHandlers = {};
     let connection = $websocket('ws://localhost:8001/ruler');
 
-    connection.send(JSON.stringify({
-        request: 'authenticate',
-        password: 'abc'
-    }));
-
     connection.onMessage(string => {
         let json = JSON.parse(string.data);
         if (json.request) {
@@ -28,11 +23,12 @@ angular.module('RulerGame')
         }
     });
 
-    this.request = (name) => {
+    this.request = (name, params) => {
         if (!pendingRequests[name]) {
             let defer = $q.defer();
             connection.send(JSON.stringify({
-                request: name
+                request: name,
+                params: params
             }));
             pendingRequests[name] = defer;
         }

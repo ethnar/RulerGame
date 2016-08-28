@@ -5,7 +5,7 @@ class WorldBuilder {
     createWorld (world) {
         let [x, y] = world.getNewCityLocation();
 
-        let player = new Player(world);
+        let player = new Player(world, 'ethnar', 'abc');
         let testCity = new City(world, x, y);
 
         testCity.setOwner(player);

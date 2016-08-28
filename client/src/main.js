@@ -8,6 +8,10 @@ angular.module('RulerGame', ['ngRoute', 'ngWebSocket'])
         });
 })
 
-.controller('RulerGameController', function ($scope, $route) {
+.controller('RulerGameController', function ($scope, $route, serverService) {
     $scope.model = {};
+
+    serverService.request('authenticate', {
+        password: 'abc'
+    });
 });

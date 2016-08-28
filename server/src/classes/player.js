@@ -1,20 +1,17 @@
 class Player {
-    constructor (world) {
+    constructor (world, name, password) {
         this.city = null;
-
-        world.getService().registerHandler('authenticate', params => {
-            setTimeout(() => {
-                this.world.getService().sendUpdate('map', {somestuff: 'This is an update'});
-            }, 1000);
-
-            return this.tiles;
-        });
+        this.name = name;
+        this.password = password;
     }
 
     getCity () {
         return this.city;
     }
 
+    verifyUsernameAndPassword (name, password) {
+        return this.password === password && this.name === name;
+    }
 }
 
 module.exports = Player;
